@@ -60,7 +60,11 @@ const modules: Module[] = [
     }
 ]
 
-export function CourseContent() {
+interface CourseContentProps {
+    onSelectModule: (id: number) => void;
+}
+
+export function CourseContent({ onSelectModule }: CourseContentProps) {
     const [expandedId, setExpandedId] = useState<number | null>(1)
 
     return (
@@ -87,10 +91,9 @@ export function CourseContent() {
                         <AnimatePresence>
                             {expandedId === mod.id && (
                                 <motion.div
-                                    initial={{ height: 0, opacity: 0 }}
-                                    animate={{ height: 'auto', opacity: 1 }}
-                                    exit={{ height: 0, opacity: 0 }}
-                                    transition={{ duration: 0.3 }}
+                                    initial={{ opacity: 0, height: 0 }}
+                                    animate={{ opacity: 1, height: 'auto' }}
+                                    exit={{ opacity: 0, height: 0 }}
                                 >
                                     <div className="px-6 pb-8 border-t border-white/5 pt-8 bg-white/[0.01]">
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
@@ -106,11 +109,17 @@ export function CourseContent() {
                                                 </div>
 
                                                 <div className="mt-8 flex gap-3">
-                                                    <button className="btn btn-outline py-2 text-xs flex items-center gap-2">
+                                                    <button
+                                                        onClick={() => onSelectModule(mod.id)}
+                                                        className="btn btn-primary py-2 text-xs flex items-center gap-2"
+                                                    >
                                                         <Play size={14} className="fill-current" />
                                                         Play Video Lesson
                                                     </button>
-                                                    <button className="btn btn-outline py-2 text-xs flex items-center gap-2">
+                                                    <button
+                                                        onClick={() => onSelectModule(mod.id)}
+                                                        className="btn btn-outline py-2 text-xs flex items-center gap-2"
+                                                    >
                                                         <FileText size={14} />
                                                         Read Text Guide
                                                     </button>
