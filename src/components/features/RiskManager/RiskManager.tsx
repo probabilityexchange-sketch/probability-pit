@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { ArrowLeft, ChevronRight, HelpCircle, Activity, Zap, Lock, TrendingUp, AlertCircle } from 'lucide-react'
+import { ArrowLeft, ChevronRight, HelpCircle, Activity, Zap, Lock, TrendingUp, AlertCircle, BarChart, Target, ShieldCheck } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button, Input, Card, Indicator, Tooltip } from '@/components/ui'
 import { Container } from '@/components/layout'
@@ -7,12 +7,20 @@ import { calculateRisk, RiskCalculation } from '@/lib/calculations'
 
 type Step = 1 | 2 | 3
 
+const stepThemes = {
+  1: { color: 'var(--color-primary)', light: 'hsla(217, 91%, 60%, 0.1)', glow: 'text-glow-primary', icon: BarChart },
+  2: { color: 'var(--color-vibrant)', light: 'hsla(280, 70%, 60%, 0.1)', glow: 'text-glow-vibrant', icon: Target },
+  3: { color: 'var(--color-success)', light: 'hsla(142, 71% , 55%, 0.1)', glow: 'text-glow-success', icon: ShieldCheck },
+}
+
 export function RiskManager() {
   const [step, setStep] = useState<Step>(1)
   const [yesPrice, setYesPrice] = useState<string>('0.60')
   const [noPrice, setNoPrice] = useState<string>('0.45')
   const [myEstimate, setMyEstimate] = useState<string>('0.65')
   const [bankroll, setBankroll] = useState<string>('1000')
+
+  const theme = stepThemes[step]
 
   const calc = useMemo<RiskCalculation>(() => {
     return calculateRisk(
@@ -27,275 +35,259 @@ export function RiskManager() {
   const prevStep = () => setStep(s => Math.max(s - 1, 1) as Step)
 
   return (
-    <Container className="py-8 md:py-12">
-      <div className="max-w-5xl mx-auto">
-        <div className="flex items-center justify-between mb-8 relative">
-          <div className="absolute top-1/2 left-0 w-full h-px bg-[--color-border] -translate-y-1/2 z-0" />
-          <div
-            className="absolute top-1/2 left-0 h-px bg-[--color-primary] -translate-y-1/2 z-0 transition-all duration-500"
-            style={{ width: `${((step - 1) / 2) * 100}%` }}
-          />
-          {([1, 2, 3] as const).map((s) => (
-            <div key={s} className="relative z-10 flex flex-col items-center">
-              <div className={`step-dot ${step === s ? 'active' : step > s ? 'complete' : ''}`}>
-                {step > s ? '✓' : s}
+    <div className="relative overflow-hidden">
+      {/* Dynamic Background Blob - Shifts color based on step */}
+      <div 
+        className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] blur-[120px] rounded-full opacity-20 transition-all duration-700 pointer-events-none"
+        style={{ backgroundColor: theme.color }}
+      />
+
+      <Container className="py-8 md:py-16 relative z-20">
+        <div className="max-w-5xl mx-auto">
+          {/* Progress Indicator */}
+          <div className="flex items-center justify-between mb-12 relative max-w-2xl mx-auto">
+            <div className="absolute top-1/2 left-0 w-full h-px bg-border -translate-y-1/2 z-0" />
+            <motion.div
+              className="absolute top-1/2 left-0 h-px -translate-y-1/2 z-0"
+              animate={{ width: `${((step - 1) / 2) * 100}%`, backgroundColor: theme.color }}
+              transition={{ duration: 0.5 }}
+            />
+            {([1, 2, 3] as const).map((s) => (
+              <div key={s} className="relative z-10 flex flex-col items-center">
+                <div 
+                  className={`step-dot border-2 transition-colors duration-500 ${step === s ? 'active' : step > s ? 'complete' : 'bg-bg-background border-border'}`}
+                  style={step === s ? { backgroundColor: theme.color, borderColor: theme.color, boxShadow: `0 0 15px ${theme.color}66` } : {}}
+                >
+                  {step > s ? '✓' : s}
+                </div>
+                <span className={`text-[10px] font-bold uppercase tracking-wider mt-3 transition-colors duration-500 ${step >= s ? '' : 'text-foreground-secondary'}`} style={step >= s ? { color: stepThemes[s].color } : {}}>
+                  {s === 1 ? 'Market Data' : s === 2 ? 'Edge Calc' : 'Risk Blueprint'}
+                </span>
               </div>
-              <span className={`text-[10px] font-bold uppercase tracking-wide mt-2 ${step >= s ? (s === 1 ? 'text-[--color-primary]' : s === 2 ? 'text-[--color-vibrant]' : 'text-[--color-success]') : 'text-[--color-foreground-secondary]'}`}>
-                {s === 1 ? 'Market Data' : s === 2 ? 'Edge Calc' : 'Risk Blueprint'}
-              </span>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
-          <div className="lg:col-span-7">
-            <AnimatePresence mode="wait">
-              {step === 1 && (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            <div className="lg:col-span-7">
+              <AnimatePresence mode="wait">
                 <motion.div
-                  key="step1"
-                  initial={{ opacity: 0, x: -20 }}
+                  key={step}
+                  initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
+                  exit={{ opacity: 0, x: 10 }}
+                  transition={{ duration: 0.3 }}
                   className="space-y-6"
                 >
-                  <div>
-                    <h3 className="text-xl font-bold mb-1 text-[--color-primary]">Step 1: The Numbers</h3>
-                    <p className="text-sm text-[--color-foreground-secondary]">Enter the current exchange prices.</p>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <Input
-                      label={
-                        <span className="flex items-center gap-1.5">
-                          Yes Price
-                          <Tooltip content="Cost to buy a share that pays $1.00 if the event occurs.">
-                            <HelpCircle size={12} className="text-[--color-foreground-muted] cursor-help" />
-                          </Tooltip>
-                        </span>
-                      }
-                      prefix="$"
-                      type="number"
-                      step="0.01"
-                      value={yesPrice}
-                      onChange={(e) => setYesPrice(e.target.value)}
-                    />
-                    <Input
-                      label={
-                        <span className="flex items-center gap-1.5">
-                          No Price
-                          <Tooltip content="Cost to buy a share that pays $1.00 if the event DOES NOT occur.">
-                            <HelpCircle size={12} className="text-[--color-foreground-muted] cursor-help" />
-                          </Tooltip>
-                        </span>
-                      }
-                      prefix="$"
-                      type="number"
-                      step="0.01"
-                      value={noPrice}
-                      onChange={(e) => setNoPrice(e.target.value)}
-                    />
-                  </div>
-
-                  <Card variant="muted" className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                  {/* Step Header with Flourish */}
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center border border-border bg-bg-card shadow-lg relative overflow-hidden group">
+                      <div className="absolute inset-0 scanline-overlay opacity-10" />
+                      <theme.icon size={22} style={{ color: theme.color }} />
+                    </div>
                     <div>
-                      <span className="text-[10px] font-semibold uppercase tracking-wide text-[--color-foreground-secondary] block mb-0.5">Exchange Vig (Fee)</span>
-                      <span className={`text-xl font-mono font-bold ${calc.vig > 7 ? 'text-[--color-danger]' : 'text-[--color-success]'}`}>
-                        {calc.vig}%
-                      </span>
-                    </div>
-                    <div className="text-left sm:text-right">
-                      <span className="text-[10px] font-semibold uppercase tracking-wide text-[--color-foreground-secondary] block mb-0.5">Market Implied Prob</span>
-                      <span className="text-xl font-mono font-bold">
-                        {calc.deVigged}%
-                      </span>
-                    </div>
-                  </Card>
-
-                  <Button onClick={nextStep} className="w-full">
-                    Next: Calculate Edge
-                    <ChevronRight size={16} />
-                  </Button>
-                </motion.div>
-              )}
-
-              {step === 2 && (
-                <motion.div
-                  key="step2"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
-                  className="space-y-6"
-                >
-                  <div>
-                    <h3 className="text-xl font-bold mb-1 text-[--color-vibrant]">Step 2: Define Your Alpha</h3>
-                    <p className="text-sm text-[--color-foreground-secondary]">What is the *real* probability of this event?</p>
-                  </div>
-
-                  <div className="space-y-4">
-                    <Card variant="muted" className="text-center">
-                      <span className="text-[10px] font-semibold uppercase tracking-wide text-[--color-vibrant] block mb-3">Your Estimated Probability</span>
-                      <span className="text-4xl md:text-5xl font-mono font-bold text-[--color-vibrant] text-glow-vibrant">{(parseFloat(myEstimate) * 100).toFixed(0)}%</span>
-                      <div className="mt-6 px-2">
-                        <input
-                          type="range"
-                          min="0"
-                          max="1"
-                          step="0.01"
-                          value={myEstimate}
-                          onChange={(e) => setMyEstimate(e.target.value)}
-                          className="w-full h-2 bg-[--color-border] rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[--color-vibrant] [&::-webkit-slider-thumb]:cursor-pointer"
-                        />
-                      </div>
-                    </Card>
-
-                    <div className={`p-4 rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 ${calc.edge > 0 ? 'bg-[hsla(142_71%_55%_/_0.1)] border border-[hsla(142_71%_55%_/_0.2)]' : 'bg-[hsla(0_84%_70%_/_0.1)] border border-[hsla(0_84%_70%_/_0.2)]'}`}>
-                      <div className="flex items-center gap-3">
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center ${calc.edge > 0 ? 'bg-[hsla(142_71%_55%_/_0.2)] text-[--color-success]' : 'bg-[hsla(0_84%_70%_/_0.2)] text-[--color-danger]'}`}>
-                          {calc.edge > 0 ? <Zap size={16} /> : <AlertCircle size={16} />}
-                        </div>
-                        <div>
-                          <span className="text-[10px] font-semibold uppercase tracking-wide text-[--color-foreground-secondary] block">Edge over Market</span>
-                          <span className="text-lg font-mono font-bold">
-                            {calc.edge > 0 ? '+' : ''}{calc.edge} pts
-                          </span>
-                        </div>
-                      </div>
-                      <span className={`text-sm font-semibold ${calc.edge > 0 ? 'text-[--color-success]' : 'text-[--color-danger]'}`}>
-                        {calc.edge > 0 ? '+EV Setup Detected' : 'No Statistical Advantage'}
-                      </span>
+                      <h3 className="text-xl font-bold tracking-tight" style={{ color: theme.color }}>
+                        Step 0{step}: {step === 1 ? 'The Numbers' : step === 2 ? 'Define Your Alpha' : 'The Risk Blueprint'}
+                      </h3>
+                      <p className="text-xs text-foreground-muted uppercase tracking-widest font-medium">Protocol Phase 0{step}</p>
                     </div>
                   </div>
 
-                  <div className="flex gap-3">
-                    <Button onClick={prevStep} variant="secondary" className="flex-1">
-                      <ArrowLeft size={14} />
-                      Back
-                    </Button>
-                    <Button onClick={nextStep} variant="success" className="flex-[2]">
-                      Finalize Risk Blueprint
-                      <ChevronRight size={16} />
-                    </Button>
-                  </div>
-                </motion.div>
-              )}
-
-              {step === 3 && (
-                <motion.div
-                  key="step3"
-                  initial={{ opacity: 0, scale: 0.98 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="space-y-6"
-                >
-                  <div className="text-center">
-                    <h3 className="text-xl font-bold mb-1 text-[--color-success]">The Risk Blueprint</h3>
-                    <p className="text-sm text-[--color-foreground-secondary]">How you should execute this trade to maximize Expected Value.</p>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <Card variant="muted" className="space-y-2">
-                      <span className="text-[10px] font-semibold uppercase tracking-wide text-[--color-foreground-secondary] block">Optimal Stake</span>
-                      <div className="flex items-baseline gap-1">
-                        <span className="text-2xl font-mono font-bold text-[--color-primary]">{calc.kelly}%</span>
-                        <span className="text-xs text-[--color-foreground-secondary]">of bankroll</span>
-                      </div>
-                      <p className="text-[10px] text-[--color-foreground-secondary]">Quarter-Kelly sizing</p>
-                    </Card>
-
-                    <Card variant="muted" className="space-y-2">
-                      <span className="text-[10px] font-semibold uppercase tracking-wide text-[--color-foreground-secondary] block">Expected Value</span>
-                      <div className="flex items-baseline gap-1">
-                        <span className={`text-2xl font-mono font-bold text-glow-success ${calc.ev > 0 ? 'text-[--color-success]' : 'text-[--color-danger]'}`}>
-                          {calc.ev}
-                        </span>
-                        <span className="text-xs text-[--color-foreground-secondary]">per contract</span>
-                      </div>
-                      <p className="text-[10px] text-[--color-foreground-secondary]">Statistical profit expectation</p>
-                    </Card>
-                  </div>
-
-                  <Card variant="outline" className="bg-[hsla(217,33%,17%,0.5)]">
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="text-xs font-semibold uppercase tracking-wide text-[--color-primary-light]">Bankroll Logic</span>
-                      <TrendingUp size={14} className="text-[--color-primary-light]" />
-                    </div>
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                      <div className="w-full sm:flex-1">
+                  {step === 1 && (
+                    <div className="space-y-6">
+                      <Card className="grid grid-cols-2 gap-4 bg-bg-card/40 backdrop-blur-md">
                         <Input
-                          label="Total Bankroll"
+                          label={<div className="flex items-center gap-1.5">Yes Price <Tooltip content="Cost to buy YES shares"><HelpCircle size={12}/></Tooltip></div>}
                           prefix="$"
                           type="number"
-                          value={bankroll}
-                          onChange={(e) => setBankroll(e.target.value)}
+                          step="0.01"
+                          value={yesPrice}
+                          onChange={(e) => setYesPrice(e.target.value)}
                         />
+                        <Input
+                          label={<div className="flex items-center gap-1.5">No Price <Tooltip content="Cost to buy NO shares"><HelpCircle size={12}/></Tooltip></div>}
+                          prefix="$"
+                          type="number"
+                          step="0.01"
+                          value={noPrice}
+                          onChange={(e) => setNoPrice(e.target.value)}
+                        />
+                      </Card>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <Card variant="muted" padding="md" className="border-l-2 border-l-danger">
+                          <span className="text-[10px] font-bold uppercase text-foreground-secondary block mb-1">Exchange Vig</span>
+                          <span className={`text-2xl font-mono font-bold ${calc.vig > 7 ? 'text-danger' : 'text-success'}`}>
+                            {calc.vig}%
+                          </span>
+                        </Card>
+                        <Card variant="muted" padding="md" className="border-l-2 border-l-primary">
+                          <span className="text-[10px] font-bold uppercase text-foreground-secondary block mb-1">Implied Prob</span>
+                          <span className="text-2xl font-mono font-bold">{calc.deVigged}%</span>
+                        </Card>
                       </div>
-                      <div className="w-full sm:flex-1 sm:text-right">
-                        <span className="text-[10px] font-semibold text-[--color-foreground-secondary] uppercase tracking-wide block mb-0.5">Max Position Buy</span>
-                        <span className="text-2xl font-mono font-bold text-glow-primary">${calc.size}</span>
+
+                      <Button onClick={nextStep} className="w-full h-14 text-base shadow-glow-primary">
+                        Continue to Alpha Definition
+                        <ChevronRight size={18} className="ml-1" />
+                      </Button>
+                    </div>
+                  )}
+
+                  {step === 2 && (
+                    <div className="space-y-6">
+                      <Card variant="muted" className="text-center py-12 relative overflow-hidden">
+                        <div className="absolute inset-0 scanline-overlay opacity-5" />
+                        <span className="text-[10px] font-bold uppercase text-vibrant block mb-4 tracking-[0.3em]">Estimated Probability</span>
+                        <span className="text-7xl font-mono font-bold text-vibrant text-glow-vibrant">{(parseFloat(myEstimate) * 100).toFixed(0)}%</span>
+                        <div className="mt-10 px-8">
+                          <input
+                            type="range"
+                            min="0"
+                            max="1"
+                            step="0.01"
+                            value={myEstimate}
+                            onChange={(e) => setMyEstimate(e.target.value)}
+                            className="w-full h-2 bg-border rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-vibrant [&::-webkit-slider-thumb]:shadow-[0_0_15px_var(--color-vibrant)]"
+                          />
+                        </div>
+                      </Card>
+
+                      <div className={`card-insight flex items-center justify-between p-6 ${calc.edge > 0 ? 'opacity-100 ring-1 ring-warning/30' : 'opacity-40 grayscale'}`}>
+                        <div className="flex items-center gap-5">
+                          <div className="w-12 h-12 rounded-xl bg-warning flex items-center justify-center text-bg-background shadow-lg shadow-warning/20">
+                            <Zap size={24} fill="currentColor" />
+                          </div>
+                          <div>
+                            <span className="text-[10px] font-bold uppercase text-warning tracking-widest block mb-0.5">Statistical Edge</span>
+                            <span className="text-2xl font-mono font-bold text-warning">
+                              {calc.edge > 0 ? '+' : ''}{calc.edge} pts
+                            </span>
+                          </div>
+                        </div>
+                        <Badge variant="warning" dot className="animate-pulse">Active Setup</Badge>
+                      </div>
+
+                      <div className="flex gap-4">
+                        <Button onClick={prevStep} variant="secondary" className="flex-1 h-14">
+                          <ArrowLeft size={20} />
+                        </Button>
+                        <Button onClick={nextStep} variant="warning" className="flex-[3] h-14 font-black shadow-lg shadow-warning/20 hover:scale-[1.02]">
+                          FINAL RISK BLUEPRINT
+                        </Button>
                       </div>
                     </div>
-                  </Card>
+                  )}
 
-                  <div className="flex gap-3">
-                    <Button onClick={() => setStep(1)} variant="secondary" className="flex-1">
-                      Reset Analysis
-                    </Button>
-                    <Button 
-                      variant={calc.isProfitable ? 'primary' : 'secondary'}
-                      className="flex-[2]"
-                      disabled={!calc.isProfitable}
-                    >
-                      {calc.isProfitable ? 'Execute Tactical Trade' : 'Setup Not Recommended'}
-                    </Button>
-                  </div>
+                  {step === 3 && (
+                    <div className="space-y-6">
+                      <div className="grid grid-cols-2 gap-4">
+                        <Card className="border-t-4 border-t-primary p-8 bg-gradient-to-br from-primary/5 to-transparent">
+                          <span className="text-[10px] font-bold uppercase text-foreground-secondary block mb-3 tracking-widest">Optimal Allocation</span>
+                          <div className="flex items-baseline gap-2">
+                            <span className="text-5xl font-mono font-bold text-primary text-glow-primary">{calc.kelly}%</span>
+                            <span className="text-xs font-bold text-foreground-secondary uppercase tracking-tighter">Stake</span>
+                          </div>
+                        </Card>
+                        <Card className={`border-t-4 p-8 bg-gradient-to-br from-transparent ${calc.ev > 0 ? 'border-t-success to-success/5' : 'border-t-danger to-danger/5'}`}>
+                          <span className="text-[10px] font-bold uppercase text-foreground-secondary block mb-3 tracking-widest">Expected Value</span>
+                          <div className="flex items-baseline gap-2">
+                            <span className={`text-5xl font-mono font-bold text-glow-success ${calc.ev > 0 ? 'text-success' : 'text-danger'}`}>
+                              {calc.ev}
+                            </span>
+                            <span className="text-xs font-bold text-foreground-secondary uppercase tracking-tighter">/ Unit</span>
+                          </div>
+                        </Card>
+                      </div>
+
+                      <Card variant="outline" className="bg-bg-card/30 border-primary/20">
+                        <div className="flex items-center gap-3 mb-6">
+                          <div className="w-2 h-2 rounded-full bg-primary" />
+                          <span className="text-xs font-bold uppercase tracking-[0.2em] text-primary-light">Liquidity Execution</span>
+                        </div>
+                        <div className="flex flex-col sm:flex-row items-end gap-10">
+                          <div className="w-full">
+                            <Input
+                              label="Operational Bankroll"
+                              prefix="$"
+                              type="number"
+                              value={bankroll}
+                              onChange={(e) => setBankroll(e.target.value)}
+                            />
+                          </div>
+                          <div className="w-full text-right">
+                            <span className="text-[10px] font-bold text-foreground-secondary uppercase block mb-2">Max Position Order</span>
+                            <span className="text-5xl font-mono font-bold text-foreground text-glow-primary">${calc.size}</span>
+                          </div>
+                        </div>
+                      </Card>
+
+                      <div className="flex gap-4">
+                        <Button onClick={() => setStep(1)} variant="secondary" className="flex-1 h-14">
+                          RESET
+                        </Button>
+                        <Button 
+                          variant={calc.isProfitable ? 'primary' : 'secondary'}
+                          className="flex-[2] h-14 text-base font-black tracking-widest overflow-hidden relative"
+                          disabled={!calc.isProfitable}
+                        >
+                          {calc.isProfitable && <div className="absolute inset-0 scanline-overlay opacity-30" />}
+                          {calc.isProfitable ? 'EXECUTE TACTICAL ORDER' : 'INSUFFICIENT EDGE'}
+                        </Button>
+                      </div>
+                    </div>
+                  )}
                 </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+              </AnimatePresence>
+            </div>
 
-          <div className="lg:col-span-5 space-y-4">
-            <Card variant="muted" padding="lg">
-              <div className="flex items-center gap-2 mb-4">
-                <Activity className="text-[--color-primary]" size={16} />
-                <span className="text-xs font-semibold uppercase tracking-wide">Real-Time Indicators</span>
-              </div>
-              <div className="space-y-4">
-                <Indicator
-                  label="Information Edge"
-                  value={`${calc.edge} pts`}
-                  status={calc.edge > 10 ? 'Elite' : calc.edge > 0 ? 'Active' : 'Negative'}
-                  variant={calc.edge > 0 ? 'success' : 'danger'}
-                />
-                <Indicator
-                  label="Vig Resistance"
-                  value={`${calc.vig}%`}
-                  status={calc.vig < 4 ? 'Low' : calc.vig < 7 ? 'Fair' : 'Toxic'}
-                  variant={calc.vig < 7 ? 'primary' : 'danger'}
-                />
-                <Indicator
-                  label="Volatility Index"
-                  value="Medium"
-                  status="Standard"
-                  variant="muted"
-                />
-              </div>
-            </Card>
-
-            <div className="card-insight">
-              <div className="flex gap-3">
-                <div className="w-8 h-8 rounded-full bg-[--color-warning] flex items-center justify-center shrink-0">
-                  <Lock size={14} className="text-[--color-bg-background]" />
+            <div className="lg:col-span-5 space-y-6">
+              <Card variant="muted" padding="lg" className="border-l-4 border-l-primary relative overflow-hidden">
+                <div className="absolute inset-0 scanline-overlay opacity-5" />
+                <div className="flex items-center gap-3 mb-8">
+                  <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                  <span className="text-xs font-bold uppercase tracking-[0.2em] text-foreground">Terminal Indicators</span>
                 </div>
-                <div>
-                  <span className="text-[10px] font-semibold uppercase tracking-wide text-[--color-warning] block mb-1">Senior Trader Note</span>
-                  <p className="text-xs text-[--color-foreground-secondary] leading-relaxed">
-                    "If your Edge isn't at least 2× the Vig, the exchange is eating your profit before you've even entered."
-                  </p>
+                <div className="space-y-6">
+                  <Indicator
+                    label="Alpha Signal"
+                    value={`${calc.edge} pts`}
+                    status={calc.edge > 10 ? 'Premium' : calc.edge > 0 ? 'Confirmed' : 'None'}
+                    variant={calc.edge > 0 ? 'success' : 'danger'}
+                  />
+                  <Indicator
+                    label="Exchange Friction"
+                    value={`${calc.vig}%`}
+                    status={calc.vig < 4 ? 'Optimal' : calc.vig < 7 ? 'Neutral' : 'Hostile'}
+                    variant={calc.vig < 7 ? 'primary' : 'danger'}
+                  />
+                  <Indicator
+                    label="Confidence Index"
+                    value="Variable"
+                    status="Systemic"
+                    variant="muted"
+                  />
+                </div>
+              </Card>
+
+              {/* Enhanced Senior Trader Note */}
+              <div className="card-insight">
+                <div className="absolute inset-0 scanline-overlay opacity-10" />
+                <div className="flex gap-4">
+                  <div className="w-12 h-12 rounded-lg bg-warning flex items-center justify-center shrink-0">
+                    <Lock size={20} className="text-bg-background" />
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-bold uppercase text-warning block mb-2 tracking-[0.2em]">Operational Doctrine</span>
+                    <p className="text-xs text-foreground-muted leading-relaxed font-medium italic">
+                      "Market efficiency is a myth perpetrated by participants with inferior data. Your edge is the delta between clinical reality and aggregate sentiment. If that delta does not exceed the exchange's take by 200%, the risk is asymmetric to the downside."
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </Container>
+      </Container>
+    </div>
   )
 }
