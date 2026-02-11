@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
 import { ArrowLeft, ChevronRight, HelpCircle, Activity, Zap, Lock, TrendingUp, AlertCircle, BarChart, Target, ShieldCheck } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Button, Input, Card, Indicator, Tooltip } from '@/components/ui'
+import { Button, Input, Card, Indicator, Tooltip, Badge } from '@/components/ui'
 import { Container } from '@/components/layout'
 import { calculateRisk, RiskCalculation } from '@/lib/calculations'
 

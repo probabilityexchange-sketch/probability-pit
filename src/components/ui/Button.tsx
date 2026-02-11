@@ -1,7 +1,7 @@
 import { forwardRef, ButtonHTMLAttributes } from 'react'
 import { clsx } from 'clsx'
 
-export type ButtonVariant = 'primary' | 'secondary' | 'success' | 'ghost' | 'danger'
+export type ButtonVariant = 'primary' | 'secondary' | 'success' | 'ghost' | 'danger' | 'warning'
 export type ButtonSize = 'sm' | 'md' | 'lg'
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -16,6 +16,7 @@ const variantStyles: Record<ButtonVariant, string> = {
   success: 'bg-[--color-success] text-[--color-success-foreground] hover:brightness-110',
   ghost: 'bg-transparent text-[--color-foreground-muted] hover:text-[--color-foreground] hover:bg-[--color-bg-muted]',
   danger: 'bg-[--color-danger] text-[--color-danger-foreground]',
+  warning: 'bg-[--color-warning] text-[--color-bg-background] hover:brightness-110',
 }
 
 const sizeStyles: Record<ButtonSize, string> = {
