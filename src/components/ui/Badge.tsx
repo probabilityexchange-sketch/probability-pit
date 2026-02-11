@@ -9,12 +9,12 @@ export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
 }
 
 const variantStyles: Record<BadgeVariant, string> = {
-  default: 'bg-white/5 text-text-secondary border-border',
-  primary: 'bg-primary/20 text-primary-light border-primary/30',
-  success: 'bg-success/20 text-success-light border-success/30',
-  danger: 'bg-danger/20 text-danger-light border-danger/30',
-  warning: 'bg-warning/20 text-warning border-warning/30',
-  muted: 'bg-white/5 text-text-muted border-border',
+  default: 'bg-[--color-bg-muted] text-[--color-foreground]',
+  primary: 'bg-[hsla(217_91%_60%_/_0.15)] text-[--color-primary-light]',
+  success: 'bg-[hsla(142_71%_55%_/_0.15)] text-[--color-success]',
+  danger: 'bg-[hsla(0_84%_70%_/_0.15)] text-[--color-danger]',
+  warning: 'bg-[hsla(38_92%_60%_/_0.15)] text-[--color-warning]',
+  muted: 'bg-[--color-bg-muted] text-[--color-foreground-muted]',
 }
 
 export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
@@ -23,7 +23,7 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
       <span
         ref={ref}
         className={clsx(
-          'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide border',
+          'inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-semibold',
           variantStyles[variant],
           className
         )}
@@ -32,11 +32,11 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
         {dot && (
           <span className={clsx(
             'w-1.5 h-1.5 rounded-full',
-            variant === 'success' && 'bg-success-light',
-            variant === 'danger' && 'bg-danger-light',
-            variant === 'primary' && 'bg-primary-light',
-            variant === 'warning' && 'bg-warning',
-            (variant === 'default' || variant === 'muted') && 'bg-text-muted'
+            variant === 'success' && 'bg-[--color-success]',
+            variant === 'danger' && 'bg-[--color-danger]',
+            variant === 'primary' && 'bg-[--color-primary-light]',
+            variant === 'warning' && 'bg-[--color-warning]',
+            (variant === 'default' || variant === 'muted') && 'bg-[--color-foreground-muted]'
           )} />
         )}
         {children}

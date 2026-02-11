@@ -31,7 +31,7 @@ export function ModuleViewer() {
         setContent(text)
       } catch (err) {
         console.error('Failed to load module content:', err)
-        setContent('# Error\n\nFailed to load content. Please ensure the curriculum files are in the public folder.')
+        setContent('# Error\n\nFailed to load content.')
       } finally {
         setLoading(false)
       }
@@ -40,122 +40,114 @@ export function ModuleViewer() {
   }, [id])
 
   return (
-    <Container className="py-8 md:py-12 pb-20">
+    <Container className="py-6 md:py-10 pb-16">
       <div className="max-w-4xl mx-auto">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 md:mb-12">
+        <div className="flex items-center justify-between mb-6">
           <Link
             to="/academy"
-            className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-text-muted hover:text-white transition-colors group"
+            className="flex items-center gap-2 text-xs font-medium text-[--color-foreground-muted] hover:text-[--color-foreground] transition-[--transition-base]"
           >
-            <div className="w-8 h-8 rounded-full border border-white/5 flex items-center justify-center group-hover:border-white/20 transition-all">
-              <ArrowLeft size={14} />
-            </div>
+            <ArrowLeft size={14} />
             Back to Curriculum
           </Link>
         </div>
 
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-20 gap-4">
-            <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
-            <span className="text-xs font-black uppercase tracking-widest text-text-muted">Decrypting Alpha...</span>
+          <div className="flex flex-col items-center justify-center py-16 gap-3">
+            <div className="w-8 h-8 border-2 border-[--color-primary]/20 border-t-[--color-primary] rounded-full animate-spin" />
+            <span className="text-xs text-[--color-foreground-muted]">Loading...</span>
           </div>
         ) : (
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <Card variant="hud" className="p-6 md:p-12 overflow-hidden border-white/5">
-              <article className="prose prose-invert max-w-none">
+            <Card variant="muted" className="p-4 md:p-8 overflow-hidden">
+              <article className="prose prose-invert max-w-none prose-sm md:prose-base">
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm]}
                   components={{
                     h1: ({ children }) => (
-                      <h1 className="text-3xl md:text-4xl font-black mb-8 md:mb-12 text-white border-b border-white/5 pb-6 md:pb-8">
+                      <h1 className="text-2xl md:text-3xl font-bold mb-6 md:mb-8 text-[--color-foreground] border-b border-[--color-border] pb-4">
                         {children}
                       </h1>
                     ),
                     h2: ({ children }) => (
-                      <h2 className="text-xl md:text-2xl font-black mt-12 md:mt-16 mb-6 md:mb-8 text-primary uppercase tracking-tighter flex items-center gap-3">
-                        <div className="w-2 h-6 md:h-8 bg-primary rounded-full shrink-0" />
+                      <h2 className="text-lg md:text-xl font-bold mt-8 md:mt-12 mb-4 text-[--color-primary] flex items-center gap-2">
+                        <div className="w-1 h-5 bg-[--color-primary] rounded-full shrink-0" />
                         {children}
                       </h2>
                     ),
                     h3: ({ children }) => (
-                      <h3 className="text-lg md:text-xl font-bold mt-8 md:mt-12 mb-4 md:mb-6 text-white">
+                      <h3 className="text-base md:text-lg font-semibold mt-6 md:mt-8 mb-3 text-[--color-foreground]">
                         {children}
                       </h3>
                     ),
                     p: ({ children }) => (
-                      <p className="text-base md:text-lg text-text-secondary leading-relaxed mb-4 md:mb-6 font-medium">
+                      <p className="text-sm md:text-base text-[--color-foreground-muted] leading-relaxed mb-4">
                         {children}
                       </p>
                     ),
-                    ul: ({ children }) => <ul className="space-y-3 md:space-y-4 mb-6 md:mb-8 list-none">{children}</ul>,
+                    ul: ({ children }) => <ul className="space-y-2 mb-4 list-none">{children}</ul>,
                     li: ({ children }) => (
-                      <li className="flex gap-3 md:gap-4 items-start text-text-secondary">
-                        <CheckCircle size={18} className="text-primary mt-0.5 md:mt-1 shrink-0" />
+                      <li className="flex gap-2 items-start text-sm text-[--color-foreground-muted]">
+                        <CheckCircle size={14} className="text-[--color-primary] mt-0.5 shrink-0" />
                         <span>{children}</span>
                       </li>
                     ),
                     blockquote: ({ children }) => (
-                      <div className="bg-primary/5 border-l-4 border-primary p-6 md:p-8 my-8 md:my-10 rounded-r-2xl italic text-lg md:text-xl text-primary-light font-medium tracking-tight">
+                      <div className="bg-[hsla(217_91%_60%_/_0.1)] border-l-2 border-[--color-primary] p-4 my-6 rounded-r-lg italic text-[--color-primary-light]">
                         {children}
                       </div>
                     ),
                     table: ({ children }) => (
-                      <div className="overflow-x-auto my-8 md:my-12 border border-white/5 rounded-2xl overflow-hidden">
-                        <table className="w-full text-left border-collapse bg-black/20">{children}</table>
+                      <div className="overflow-x-auto my-6 border border-[--color-border] rounded-lg overflow-hidden">
+                        <table className="w-full text-left border-collapse bg-[--color-bg-muted] text-sm">{children}</table>
                       </div>
                     ),
                     thead: ({ children }) => (
-                      <thead className="bg-white/5 text-[10px] font-black uppercase tracking-widest text-text-muted">
+                      <thead className="bg-[--color-bg-card] text-[10px] font-semibold uppercase tracking-wide text-[--color-foreground-muted]">
                         {children}
                       </thead>
                     ),
-                    th: ({ children }) => <th className="p-3 md:p-4 border-b border-white/5">{children}</th>,
+                    th: ({ children }) => <th className="p-2 md:p-3 border-b border-[--color-border]">{children}</th>,
                     td: ({ children }) => (
-                      <td className="p-3 md:p-4 border-b border-white/5 text-sm font-medium text-text-secondary">
+                      <td className="p-2 md:p-3 border-b border-[--color-border] text-[--color-foreground-muted]">
                         {children}
                       </td>
                     ),
-                    strong: ({ children }) => <strong className="text-white font-black">{children}</strong>,
+                    strong: ({ children }) => <strong className="text-[--color-foreground] font-semibold">{children}</strong>,
                     code: ({ children }) => (
-                      <code className="bg-white/5 px-2 py-0.5 rounded font-mono text-primary-light text-sm">
+                      <code className="bg-[--color-bg-muted] px-1.5 py-0.5 rounded font-mono text-[--color-primary-light] text-xs">
                         {children}
                       </code>
                     ),
+                    hr: () => <hr className="border-[--color-border] my-8" />,
                   }}
                 >
                   {content}
                 </ReactMarkdown>
               </article>
 
-              <div className="mt-12 md:mt-20 pt-8 md:pt-12 border-t border-white/10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <div className="flex items-center gap-4">
-                  <div className="flex -space-x-3">
-                    {[1, 2, 3].map((i) => (
-                      <div key={i} className="w-10 h-10 rounded-full border-2 border-bg-card bg-bg-dark" />
-                    ))}
-                  </div>
-                  <span className="text-[10px] font-black uppercase tracking-widest text-text-muted">
-                    1.2k Quant students active
-                  </span>
-                </div>
-                <Button variant="success">
-                  <Download size={18} />
-                  Download PDF Resources
+              <div className="mt-8 pt-6 border-t border-[--color-border] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                <span className="text-xs text-[--color-foreground-muted]">
+                  Module {id} of 4
+                </span>
+                <Button variant="success" size="sm">
+                  <Download size={14} />
+                  Download PDF
                 </Button>
               </div>
             </Card>
           </motion.div>
         )}
 
-        <div className="mt-8 flex justify-between items-center">
+        <div className="mt-6 flex justify-between items-center">
           {id > 1 ? (
             <Link to={`/academy/${id - 1}`}>
-              <Button variant="secondary">
-                <ArrowLeft size={16} className="mr-2" />
-                Previous Module
+              <Button variant="secondary" size="sm">
+                <ArrowLeft size={14} />
+                Previous
               </Button>
             </Link>
           ) : (
@@ -163,16 +155,16 @@ export function ModuleViewer() {
           )}
           {id < 4 ? (
             <Link to={`/academy/${id + 1}`}>
-              <Button>
-                Next Module
-                <ChevronRight size={16} className="ml-2" />
+              <Button size="sm">
+                Next
+                <ChevronRight size={14} />
               </Button>
             </Link>
           ) : (
             <Link to="/">
-              <Button variant="success">
+              <Button variant="success" size="sm">
                 Try Risk Manager
-                <ChevronRight size={16} className="ml-2" />
+                <ChevronRight size={14} />
               </Button>
             </Link>
           )}

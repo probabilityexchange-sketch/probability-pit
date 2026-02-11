@@ -8,10 +8,10 @@ export function AcademyPage() {
         badge="Quant Training Protocol"
         title={
           <>
-            The <span className="text-primary">Quant Academy</span>
+            The <span className="text-[--color-primary-light]">Quant Academy</span>
           </>
         }
-        subtitle="Master the mathematical frameworks of elite prediction market participants through structured, battle-tested modules."
+        subtitle="Master the mathematical frameworks of elite prediction market participants."
       />
       <CourseContent />
     </>

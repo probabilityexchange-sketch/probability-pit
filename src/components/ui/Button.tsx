@@ -11,17 +11,17 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variantStyles: Record<ButtonVariant, string> = {
-  primary: 'bg-primary text-white hover:shadow-glow-primary hover:-translate-y-0.5',
-  secondary: 'bg-transparent border border-border text-text-main hover:bg-white/5 hover:border-text-muted',
-  success: 'bg-success text-white hover:shadow-glow-success hover:-translate-y-0.5',
-  ghost: 'bg-transparent text-text-muted hover:text-white hover:bg-white/5',
-  danger: 'bg-danger text-white hover:bg-danger-light',
+  primary: 'bg-[--color-primary] text-[--color-primary-foreground] hover:bg-[--color-primary-light]',
+  secondary: 'bg-transparent border border-[--color-border] text-[--color-foreground] hover:bg-[--color-bg-muted]',
+  success: 'bg-[--color-success] text-[--color-success-foreground] hover:brightness-110',
+  ghost: 'bg-transparent text-[--color-foreground-muted] hover:text-[--color-foreground] hover:bg-[--color-bg-muted]',
+  danger: 'bg-[--color-danger] text-[--color-danger-foreground]',
 }
 
 const sizeStyles: Record<ButtonSize, string> = {
-  sm: 'px-4 py-2 text-xs',
-  md: 'px-6 py-3 text-sm',
-  lg: 'px-8 py-4 text-base',
+  sm: 'px-3 py-1.5 text-xs',
+  md: 'px-4 py-2 text-sm',
+  lg: 'px-6 py-2.5 text-sm',
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -30,7 +30,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         ref={ref}
         className={clsx(
-          'inline-flex items-center justify-center gap-2 rounded-lg font-semibold cursor-pointer border-none font-sans transition-all duration-250 ease-smooth disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none',
+          'inline-flex items-center justify-center gap-2 rounded-[--radius] font-semibold cursor-pointer border-none font-sans transition-[--transition-base] disabled:opacity-50 disabled:cursor-not-allowed',
           variantStyles[variant],
           sizeStyles[size],
           className
