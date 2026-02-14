@@ -9,7 +9,7 @@ interface ContainerProps {
 
 const sizeStyles = {
   sm: 'max-w-3xl',
-  default: 'max-w-7xl',
+  default: 'max-w-[1200px]',
   lg: 'max-w-[1400px]',
   full: 'max-w-none',
 }
@@ -17,7 +17,7 @@ const sizeStyles = {
 export function Container({ children, className, size = 'default' }: ContainerProps) {
   return (
     <div className={clsx(
-      'mx-auto px-4 sm:px-6 md:px-8 lg:px-10',
+      'mx-auto px-4 md:px-6',
       sizeStyles[size],
       className
     )}>

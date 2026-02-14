@@ -11,18 +11,18 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variantStyles: Record<ButtonVariant, string> = {
-  primary: 'bg-[--color-primary] text-[--color-primary-foreground] hover:bg-[--color-primary-light]',
-  secondary: 'bg-transparent border border-[--color-border] text-[--color-foreground] hover:bg-[--color-bg-muted]',
-  success: 'bg-[--color-success] text-[--color-success-foreground] hover:brightness-110',
-  ghost: 'bg-transparent text-[--color-foreground-muted] hover:text-[--color-foreground] hover:bg-[--color-bg-muted]',
-  danger: 'bg-[--color-danger] text-[--color-danger-foreground]',
-  warning: 'bg-[--color-warning] text-[--color-bg-background] hover:brightness-110',
+  primary: 'bg-primary text-white hover:brightness-110 active:brightness-95',
+  secondary: 'bg-transparent border border-border text-foreground-secondary hover:bg-bg-elevated hover:text-foreground active:bg-bg-muted',
+  success: 'bg-success text-white hover:brightness-110 active:brightness-95',
+  ghost: 'bg-transparent text-foreground-secondary hover:text-foreground hover:bg-bg-elevated active:bg-bg-muted',
+  danger: 'bg-danger text-white hover:brightness-110 active:brightness-95',
+  warning: 'bg-warning text-[hsl(222_47%_7%)] hover:brightness-110 active:brightness-95',
 }
 
 const sizeStyles: Record<ButtonSize, string> = {
-  sm: 'px-3 py-1.5 text-xs',
-  md: 'px-4 py-2 text-sm',
-  lg: 'px-6 py-2.5 text-sm',
+  sm: 'h-8 px-3 text-xs',
+  md: 'h-10 px-4 text-sm',
+  lg: 'h-12 px-6 text-sm',
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -31,7 +31,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         ref={ref}
         className={clsx(
-          'inline-flex items-center justify-center gap-2 rounded-[--radius] font-semibold cursor-pointer border-none font-sans transition-[--transition-base] disabled:opacity-50 disabled:cursor-not-allowed',
+          'inline-flex items-center justify-center gap-2 rounded-md font-semibold cursor-pointer border-none transition-all duration-150 ease-out disabled:opacity-50 disabled:cursor-not-allowed btn-active',
           variantStyles[variant],
           sizeStyles[size],
           className

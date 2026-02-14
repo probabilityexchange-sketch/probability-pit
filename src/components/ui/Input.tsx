@@ -14,13 +14,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="space-y-1.5">
         {label && (
-          <label htmlFor={id} className="block text-xs font-medium text-[--color-foreground-muted]">
+          <label htmlFor={id} className="block text-micro text-foreground-secondary">
             {label}
           </label>
         )}
         <div className="relative">
           {prefix && (
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[--color-foreground-muted] font-mono text-sm">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground-muted font-mono text-sm">
               {prefix}
             </span>
           )}
@@ -28,10 +28,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             ref={ref}
             id={id}
             className={clsx(
-              'w-full bg-[--color-bg-muted] border rounded-[--radius] text-[--color-foreground] py-2.5 px-3 font-mono text-sm transition-[--transition-base]',
-              'focus:outline-none focus:border-[--color-ring] focus:shadow-[0_0_0_2px_hsla(217_91%_67%_/_0.2)]',
-              'placeholder:text-[--color-foreground-muted]',
-              error ? 'border-[--color-danger]' : 'border-[--color-border-input]',
+              'w-full h-10 bg-bg-elevated border rounded-md text-foreground font-mono text-sm transition-all duration-150 ease-out input-focus',
+              'placeholder:text-foreground-muted',
+              error ? 'border-danger' : 'border-border',
               prefix && 'pl-7',
               suffix && 'pr-10',
               className
@@ -39,13 +38,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             {...props}
           />
           {suffix && (
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[--color-foreground-muted] font-mono text-xs">
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground-muted font-mono text-xs">
               {suffix}
             </span>
           )}
         </div>
-        {error && <p className="text-xs text-[--color-danger]">{error}</p>}
-        {hint && !error && <p className="text-xs text-[--color-foreground-muted]">{hint}</p>}
+        {error && <p className="text-xs text-danger">{error}</p>}
+        {hint && !error && <p className="text-xs text-foreground-muted">{hint}</p>}
       </div>
     )
   }

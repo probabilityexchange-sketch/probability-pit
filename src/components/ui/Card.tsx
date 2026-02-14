@@ -11,16 +11,16 @@ export interface CardProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 const variantStyles: Record<CardVariant, string> = {
-  default: 'bg-[--color-bg-card] border border-[--color-border]',
-  muted: 'bg-[--color-bg-muted] border border-[--color-border]',
-  outline: 'bg-transparent border border-[--color-border]',
+  default: 'bg-bg-surface border-border',
+  muted: 'bg-bg-elevated border-border',
+  outline: 'bg-transparent border-border',
 }
 
 const paddingStyles: Record<CardPadding, string> = {
   none: 'p-0',
-  sm: 'p-3',
-  md: 'p-4',
-  lg: 'p-6',
+  sm: 'p-4',
+  md: 'p-6',
+  lg: 'p-8',
 }
 
 export const Card = forwardRef<HTMLDivElement, CardProps>(
@@ -29,10 +29,10 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
       <div
         ref={ref}
         className={clsx(
-          'rounded-[--radius-lg] relative overflow-hidden transition-[--transition-base]',
+          'rounded-xl border relative overflow-hidden transition-all duration-150 ease-out',
           variantStyles[variant],
           paddingStyles[padding],
-          hover && 'hover:border-[hsla(217_91%_60%_/_0.3)]',
+          hover && 'card-hover cursor-pointer',
           className
         )}
         {...props}

@@ -11,10 +11,10 @@ export interface IndicatorProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 const variantStyles: Record<IndicatorVariant, string> = {
-  success: 'bg-[hsla(142_71%_55%_/_0.15)] text-[--color-success]',
-  danger: 'bg-[hsla(0_84%_70%_/_0.15)] text-[--color-danger]',
-  primary: 'bg-[hsla(217_91%_60%_/_0.15)] text-[--color-primary-light]',
-  muted: 'bg-[--color-bg-muted] text-[--color-foreground-muted]',
+  success: 'bg-success/15 text-success',
+  danger: 'bg-danger/15 text-danger',
+  primary: 'bg-primary/15 text-primary-light',
+  muted: 'bg-bg-elevated text-foreground-muted',
 }
 
 export const Indicator = forwardRef<HTMLDivElement, IndicatorProps>(
@@ -22,7 +22,7 @@ export const Indicator = forwardRef<HTMLDivElement, IndicatorProps>(
     return (
       <div ref={ref} className={clsx('flex items-center justify-between', className)} {...props}>
         <div className="flex flex-col gap-0.5">
-          <span className="text-[10px] font-medium uppercase tracking-wide text-[--color-foreground-muted]">{label}</span>
+          <span className="text-micro text-foreground-muted">{label}</span>
           <span className="font-mono font-semibold text-sm">{value}</span>
         </div>
         <span className={clsx(

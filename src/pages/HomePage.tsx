@@ -8,7 +8,7 @@ export function HomePage() {
         badge="Professional Prediction Protocol"
         title={
           <>
-            Trading is <span className="text-[--color-primary-light]">Numerical Warfare</span>
+            Trading is <span className="text-primary-light">Numerical Warfare</span>
           </>
         }
         subtitle="Identify mispriced probabilities using information asymmetry and execute with clinical risk management."

@@ -45,8 +45,8 @@ export const modules = [
     description: "Break the gambler's mindset. Learn how the market translates events into prices and why the 'Vig' is your primary obstacle.",
     concepts: ["Implied Probability Formula", "De-vigging Strategy", "Expected Value (EV)"],
     links: [
-      { label: "Kalshi (US Regulated)", url: "https://kalshi.com" },
-      { label: "Polymarket (Crypto-native)", url: "https://polymarket.com" }
+      { label: "Kalshi (US Regulated)", url: "https://kalshi.com/sign-up/?referral=2a55b6f1-7864-40c5-bb9c-65c106496b34" },
+      { label: "Polymarket (Crypto-native)", url: "https://polymarket.com?via=billy-bradshaw-zsmu" }
     ],
     duration: "15 min"
   },

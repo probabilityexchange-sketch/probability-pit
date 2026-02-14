@@ -9,12 +9,21 @@ export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
 }
 
 const variantStyles: Record<BadgeVariant, string> = {
-  default: 'bg-[--color-bg-muted] text-[--color-foreground]',
-  primary: 'bg-[hsla(217_91%_60%_/_0.15)] text-[--color-primary-light]',
-  success: 'bg-[hsla(142_71%_55%_/_0.15)] text-[--color-success]',
-  danger: 'bg-[hsla(0_84%_70%_/_0.15)] text-[--color-danger]',
-  warning: 'bg-[hsla(38_92%_60%_/_0.15)] text-[--color-warning]',
-  muted: 'bg-[--color-bg-muted] text-[--color-foreground-muted]',
+  default: 'bg-bg-elevated text-foreground',
+  primary: 'bg-primary/15 text-primary-light',
+  success: 'bg-success/15 text-success',
+  danger: 'bg-danger/15 text-danger',
+  warning: 'bg-warning/15 text-warning',
+  muted: 'bg-bg-elevated text-foreground-muted',
+}
+
+const dotColors: Record<BadgeVariant, string> = {
+  default: 'bg-foreground-muted',
+  primary: 'bg-primary-light',
+  success: 'bg-success',
+  danger: 'bg-danger',
+  warning: 'bg-warning',
+  muted: 'bg-foreground-muted',
 }
 
 export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
@@ -30,14 +39,7 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
         {...props}
       >
         {dot && (
-          <span className={clsx(
-            'w-1.5 h-1.5 rounded-full',
-            variant === 'success' && 'bg-[--color-success]',
-            variant === 'danger' && 'bg-[--color-danger]',
-            variant === 'primary' && 'bg-[--color-primary-light]',
-            variant === 'warning' && 'bg-[--color-warning]',
-            (variant === 'default' || variant === 'muted') && 'bg-[--color-foreground-muted]'
-          )} />
+          <span className={clsx('w-1.5 h-1.5 rounded-full', dotColors[variant])} />
         )}
         {children}
       </span>
