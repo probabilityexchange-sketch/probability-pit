@@ -1,83 +1,74 @@
 import { NavLink } from 'react-router-dom'
-import { BarChart3, Network, Menu, X, Cpu } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 import { useState } from 'react'
 import { clsx } from 'clsx'
-import { Container } from './Container'
 
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const navItems = [
-    { to: '/academy', label: 'Quant Academy', icon: Network },
-    { to: '/', label: 'Risk Manager', icon: BarChart3 },
+    { to: '/academy', label: 'Academy' },
+    { to: '/', label: 'Risk Manager' },
   ]
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-border bg-bg-void/80 backdrop-blur-xl">
-      <Container>
-        <div className="flex items-center justify-between h-14">
-          <NavLink to="/" className="flex items-center gap-2.5 group">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <Cpu className="text-white w-4 h-4" />
-            </div>
-            <span className="font-semibold text-sm tracking-tight">
-              PROBABILITY<span className="text-primary-light">PIT</span>
+    <nav className="sticky top-0 z-50 border-b border-border-glass bg-bg-void/90 backdrop-blur-xl">
+      <div className="container-main">
+        <div className="flex items-center justify-between h-16">
+          <NavLink to="/" className="group">
+            <span className="text-[11px] font-medium uppercase tracking-[0.2em] text-foreground transition-premium group-hover:text-foreground-secondary">
+              Probability Pit
             </span>
           </NavLink>
 
-          <div className="hidden md:flex items-center gap-1 bg-bg-elevated/50 p-1 rounded-lg">
-            {navItems.map(({ to, label, icon: Icon }) => (
+          <div className="hidden md:flex items-center gap-8">
+            {navItems.map(({ to, label }) => (
               <NavLink
                 key={to}
                 to={to}
                 className={({ isActive }) => clsx(
-                  'flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors duration-150',
+                  'text-[11px] uppercase tracking-[0.15em] transition-premium',
                   isActive
-                    ? 'bg-primary text-white'
-                    : 'text-foreground-secondary hover:text-foreground'
+                    ? 'text-foreground'
+                    : 'text-foreground-muted hover:text-foreground-secondary'
                 )}
               >
-                <Icon size={16} />
-                <span>{label}</span>
+                {label}
               </NavLink>
             ))}
           </div>
 
-          <div className="hidden md:flex items-center gap-3">
-          </div>
-
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 text-foreground-secondary hover:text-foreground"
+            className="md:hidden p-2 text-foreground-muted hover:text-foreground transition-premium"
             aria-label="Toggle menu"
           >
-            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
           </button>
         </div>
 
         {mobileMenuOpen && (
-          <div className="md:hidden py-3 border-t border-border">
-            <div className="flex flex-col gap-1">
-              {navItems.map(({ to, label, icon: Icon }) => (
+          <div className="md:hidden py-6 border-t border-border-glass">
+            <div className="flex flex-col gap-6">
+              {navItems.map(({ to, label }) => (
                 <NavLink
                   key={to}
                   to={to}
                   onClick={() => setMobileMenuOpen(false)}
                   className={({ isActive }) => clsx(
-                    'flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-150',
+                    'text-[11px] uppercase tracking-[0.15em] transition-premium',
                     isActive
-                      ? 'bg-primary text-white'
-                      : 'text-foreground-secondary hover:text-foreground hover:bg-bg-elevated'
+                      ? 'text-foreground'
+                      : 'text-foreground-muted hover:text-foreground-secondary'
                   )}
                 >
-                  <Icon size={16} />
-                  <span>{label}</span>
+                  {label}
                 </NavLink>
               ))}
             </div>
           </div>
         )}
-      </Container>
+      </div>
     </nav>
   )
 }

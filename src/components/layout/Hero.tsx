@@ -1,6 +1,5 @@
 import { ReactNode } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Container } from './Container'
+import { motion } from 'framer-motion'
 
 interface HeroProps {
   title: ReactNode
@@ -10,46 +9,41 @@ interface HeroProps {
 }
 
 export function Hero({ title, subtitle, badge, visible = true }: HeroProps) {
+  if (!visible) return null
+
   return (
-    <AnimatePresence>
-      {visible && (
-        <motion.header
-          initial={{ height: 'auto', opacity: 1 }}
-          exit={{ height: 0, opacity: 0 }}
-          className="py-8 md:py-12 border-b border-border bg-bg-surface"
+    <div className="relative flex flex-col justify-center min-h-[40vh] lg:min-h-0">
+      {/* Ambient color glow */}
+      <div className="absolute -top-32 -left-32 w-64 h-64 bg-primary/10 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute -bottom-20 -right-20 w-48 h-48 bg-vibrant/8 rounded-full blur-[80px] pointer-events-none" />
+
+      {badge && (
+        <motion.span
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="text-micro text-primary-light block mb-8"
         >
-          <Container>
-            <div className="max-w-2xl">
-              {badge && (
-                <motion.div 
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="inline-flex items-center gap-2 bg-bg-elevated px-3 py-1 rounded-full text-xs font-medium text-foreground-secondary mb-4"
-                >
-                  {badge}
-                </motion.div>
-              )}
-              <motion.h1 
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: 0.1 }}
-                className="font-heading font-bold mb-3"
-              >
-                {title}
-              </motion.h1>
-              <motion.p 
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: 0.15 }}
-                className="text-sm md:text-base text-foreground-secondary max-w-xl"
-              >
-                {subtitle}
-              </motion.p>
-            </div>
-          </Container>
-        </motion.header>
+          {badge}
+        </motion.span>
       )}
-    </AnimatePresence>
+      <motion.h1
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
+        className="font-display text-glow"
+      >
+        {title}
+      </motion.h1>
+      <motion.p
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+        className="text-foreground-secondary mt-8 max-w-md leading-relaxed"
+        style={{ fontSize: 'var(--font-body)' }}
+      >
+        {subtitle}
+      </motion.p>
+    </div>
   )
 }
